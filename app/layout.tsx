@@ -11,13 +11,13 @@ export const metadata: Metadata = {
     description: "运营案例、文字图像、影像创作与项目策划作品集。",
     type: "website",
     locale: "zh_CN",
-    images: [{ url: "/og.png", width: 1731, height: 909, alt: "柏欣悦新媒体运营作品集" }],
+    images: [{ url: "/og.jpg", width: 1731, height: 909, alt: "柏欣悦新媒体运营作品集" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "柏欣悦｜新媒体运营作品集",
     description: "运营案例、文字图像、影像创作与项目策划作品集。",
-    images: ["/og.png"],
+    images: ["/og.jpg"],
   },
 };
 
