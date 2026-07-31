@@ -22,10 +22,10 @@ const operationCases = [
     stats: [["32+", "选题与脚本"], ["48%", "转发增长"], ["5.2万+", "人物稿阅读"]],
     images: [
       "/media/operations/netease/work.jpg",
-      "/media/operations/netease/top-video.png",
-      "/media/operations/netease/data-1.png",
-      "/media/operations/netease/data-2.png",
-      "/media/operations/netease/data-3.png",
+      "/media/operations/netease/top-video.jpg",
+      "/media/operations/netease/data-1.jpg",
+      "/media/operations/netease/data-2.jpg",
+      "/media/operations/netease/data-3.jpg",
     ],
     links: [
       { label: "陈桂林连掷九个圣杯", href: "https://weixin.qq.com/sph/Athg4JKOyK" },
@@ -43,12 +43,12 @@ const operationCases = [
     description: "围绕大学生生活、情绪节点与女性话题完成内容策划、封面文案和发布，通过真实表达建立用户共鸣。",
     stats: [["10万+", "单篇曝光"], ["9106", "单篇点赞"], ["100+", "单篇涨粉"]],
     images: [
-      "/media/operations/xhs/xhs-1.png",
-      "/media/operations/xhs/xhs-2.png",
-      "/media/operations/xhs/xhs-3.png",
-      "/media/operations/xhs/xhs-4.png",
+      "/media/operations/xhs/xhs-1.jpg",
+      "/media/operations/xhs/xhs-2.jpg",
+      "/media/operations/xhs/xhs-3.jpg",
+      "/media/operations/xhs/xhs-4.jpg",
       "/media/operations/xhs/xhs-5.jpg",
-      "/media/operations/xhs/xhs-6.png",
+      "/media/operations/xhs/xhs-6.jpg",
     ],
     links: [
       { label: "进入小红书主页", href: "https://xhslink.cn/m/AoV0qgWkAxI" },
@@ -236,8 +236,8 @@ export default function Home() {
             <span>01 / 视频脚本</span><h3>会问青年视频脚本</h3>
             <p>结合热点、影视内容与社会情绪完成选题拆解、信息补充、结构设计和口语化表达。</p>
             <div className="writing-pair">
-              {openImage("/media/text/huiwen-topics.png", "会问青年选题展示")}
-              {openImage("/media/text/huiwen-script.png", "会问青年脚本展示")}
+              {openImage("/media/text/huiwen-topics.jpg", "会问青年选题展示")}
+              {openImage("/media/text/huiwen-script.jpg", "会问青年脚本展示")}
             </div>
           </article>
           <article className="writing-card cream reveal">
@@ -278,10 +278,10 @@ export default function Home() {
         <div className="visual-block film-zone reveal">
           <div className="visual-label"><span>B</span><h3>动态影像</h3><p>纪录片 / AI视频 / MV / 热门短视频</p></div>
           <div className="film-cards">
-            <article><img src="/media/documentary-poster.png" alt="纪录片田鼠大婶裴爱民"/><span>纪录片</span><h4>《田鼠大婶·裴爱民》</h4><p>制片人 / 导演</p></article>
+            <article><img src="/media/documentary-poster.jpg" alt="纪录片田鼠大婶裴爱民"/><span>纪录片</span><h4>《田鼠大婶·裴爱民》</h4><p>制片人 / 导演</p></article>
             <article><img src="/media/profile-12.jpg" alt="AI影像觉醒飞天"/><span>AI VIDEO</span><h4>《觉醒·飞天》</h4><p>导演 / 剪辑</p></article>
             <article><img src="/media/profile-07.jpg" alt="MV干杯"/><span>MUSIC VIDEO</span><h4>MV《干杯》</h4><p>导演 / 剪辑</p></article>
-            <article><img src="/media/operations/netease/top-video.png" alt="会问青年最高赞视频"/><span>TOP CONTENT</span><h4>会问青年最高赞视频</h4><p>策划 / 脚本 / 剪辑</p><a href="https://weixin.qq.com/sph/A1baq4wtF0" target="_blank" rel="noreferrer">播放作品 ↗</a></article>
+            <article><img src="/media/operations/netease/top-video.jpg" alt="会问青年最高赞视频"/><span>TOP CONTENT</span><h4>会问青年最高赞视频</h4><p>策划 / 脚本 / 剪辑</p><a href="https://weixin.qq.com/sph/A1baq4wtF0" target="_blank" rel="noreferrer">播放作品 ↗</a></article>
           </div>
         </div>
       </section>
@@ -293,7 +293,7 @@ export default function Home() {
         <article className="project magic-project reveal">
           <div className="project-heading"><span>01</span><div><p>腾讯视频 S+ 音乐综艺</p><h3>《魔力歌先生》</h3><b>选角导演 / 前期策划与现场统筹</b></div><Cat kind={1}/></div>
           <p className="project-copy">参与艺人资料建档、邀约沟通、面试流程和录制现场执行，成功建联并邀请歌手曾一鸣、刘可夫参与节目录制。</p>
-          <div className="project-gallery magic-gallery">{[1,2,3,4,5,6,7,8].map(n => openImage(`/media/projects/magic/magic-${n}.${n===8?"png":"jpg"}`, `魔力歌先生工作资料${n}`))}</div>
+          <div className="project-gallery magic-gallery">{[1,2,3,4,5,6,7,8].map(n => openImage(`/media/projects/magic/magic-${n}.jpg`, `魔力歌先生工作资料${n}`))}</div>
           <LinkList links={[{label:"曾一鸣节目片段",href:"https://v.douyin.com/VJxCIvM535k/"},{label:"刘可夫节目片段",href:"https://v.douyin.com/qru6oLS7lng/"}]} />
           <a className="project-doc" href="/docs/magic-song.pdf" target="_blank">查看项目方案 PDF ↗</a>
         </article>
@@ -301,20 +301,20 @@ export default function Home() {
         <article className="project openmic-project reveal">
           <div className="project-heading"><span>02</span><div><p>北京卫视 × 优酷 S+ 综艺</p><h3>《一起开麦吧》</h3><b>内容策划 / 项目执行</b></div><Cat kind={3}/></div>
           <p className="project-copy">参与节目定位、选手画像、人物故事线和内容表达方向策划，协同导演、编剧与选角团队推进前期方案。</p>
-          <div className="project-gallery openmic-gallery">{[1,2,3,4].map(n => openImage(`/media/projects/openmic/openmic-${n}.${n<3?"jpg":"png"}`, `一起开麦吧工作资料${n}`))}</div>
+          <div className="project-gallery openmic-gallery">{[1,2,3,4].map(n => openImage(`/media/projects/openmic/openmic-${n}.jpg`, `一起开麦吧工作资料${n}`))}</div>
           <div className="doc-actions"><a href="/docs/open-mic-intro.pdf" target="_blank">节目介绍 PDF ↗</a><a href="/docs/open-mic-profiles.pdf" target="_blank">选手画像 PDF ↗</a></div>
         </article>
 
         <article className="project dunhuang-project reveal">
           <div className="project-heading"><span>03</span><div><p>沉浸式文旅项目</p><h3>敦煌剧本杀</h3><b>项目负责人 / 策划与剧本统筹</b></div><Cat kind={2}/></div>
           <p className="project-copy">带领团队将丝路文化转化为“剧本体验、场景联动、文创延展”的产品闭环，用互动叙事降低传统文化的进入门槛。</p>
-          <div className="project-gallery dunhuang-gallery">{["overview",4,10,11,18].map((n,index) => openImage(`/media/projects/dunhuang/dunhuang-${n}.${n==="overview"?"jpg":"png"}`, `敦煌剧本杀项目资料${index+1}`))}</div>
+          <div className="project-gallery dunhuang-gallery">{["overview",4,10,11,18].map((n,index) => openImage(`/media/projects/dunhuang/dunhuang-${n}.jpg`, `敦煌剧本杀项目资料${index+1}`))}</div>
         </article>
 
         <article className="project lanzhou-project reveal">
           <div className="project-heading"><span>04</span><div><p>原创文化综艺策划</p><h3>《出发吧，兰州》</h3><b>节目定位 / 叙事设计 / 环节策划</b></div><Cat kind={1}/></div>
           <p className="project-copy">以兰州城市气质和黄河文化为核心，设计节目定位、受众、常驻与飞行嘉宾、三幕叙事、声音表达与文创延展。</p>
-          <div className="project-gallery lanzhou-gallery">{[1,4,8,17,23,28].map(n => openImage(`/media/projects/lanzhou/lanzhou-${n}.png`, `出发吧兰州PPT第${n}页`))}</div>
+          <div className="project-gallery lanzhou-gallery">{[1,4,8,17,23,28].map(n => openImage(`/media/projects/lanzhou/lanzhou-${n}.jpg`, `出发吧兰州PPT第${n}页`))}</div>
         </article>
       </section>
 
