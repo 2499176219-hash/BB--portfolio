@@ -40,3 +40,9 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+/private-assets/
+/tmp/
+/public/media/videos/*-original.mov
+/public/media/videos/*-original.mp4
+/public/media/videos/ai-video-web.mp4
+/public/fonts/*.ttf
