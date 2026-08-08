@@ -25,9 +25,9 @@ const writings = [
 const photos = [8,3,5,27,25,28,31,33,34,16,20,19,15,6,1].map(n=>`/portfolio-images/摄影作品_${String(n).padStart(2,"0")}.jpg`);
 const posters = [1,2,3,4,5,6].map(n=>`/media/design-${n}.jpg`);
 const videos = [
-  {title:"纪录片《田鼠大婶》", meta:"制片人 / 人物纪录片", cover:"/media/videos/documentary-cover-original.png", src:"/media/videos/documentary-original.mp4"},
-  {title:"AI短片《觉醒·飞天》", meta:"编剧 / AI影像创作", cover:"/media/videos/ai-video-cover.jpg", src:"/media/videos/ai-video-web.mp4"},
-  {title:"MV《干杯》", meta:"导演 / 剪辑", cover:"/media/videos/mv-mayday-cover.jpg", src:"/media/videos/mv-original.mp4"},
+  {title:"纪录片《田鼠大婶》", meta:"制片人 / 人物纪录片", cover:"/media/videos/documentary-cover-original.png", src:"/media/videos/documentary.m4v"},
+  {title:"AI短片《觉醒·飞天》", meta:"编剧 / AI影像创作", cover:"/media/videos/ai-video-cover.jpg", src:"/media/videos/ai-video.m4v"},
+  {title:"MV《干杯》", meta:"导演 / 剪辑", cover:"/media/videos/mv-mayday-cover.jpg", src:"/media/videos/mv.m4v"},
 ];
 const projects = [
   {title:"腾讯视频音综《魔力歌先生》",type:"综艺 / 选角导演",desc:"参与前期策划、艺人资料整理、采访流程设计与录制协调，并完成艺人建联邀约。",imgs:["/media/projects/magic/magic-8-cropped.jpg","/media/projects/magic/magic-7.jpg","/media/projects/magic/magic-4.jpg","/media/projects/magic/magic-1.jpg","/media/projects/magic/magic-2.jpg","/media/projects/magic/magic-3.jpg","/media/projects/magic/magic-6.jpg"]},
