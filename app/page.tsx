@@ -516,7 +516,7 @@ export default function Home() {
               </button>
               <div className="folder-content">
                 <div className="project-summary"><p>{project.summary}</p>{project.tags.map(tag => <span key={tag}>{tag}</span>)}{project.links.length > 0 && <div className="project-links">{project.links.map(([label, href]) => <a key={href} href={href} target="_blank" rel="noreferrer">{label} ↗</a>)}</div>}</div>
-                <div className="project-document-heading"><h4>{index < 2 ? "全部工作图像" : "完整PDF预览"}</h4><span>共 {project.images.length} 页/张 · 左右滑动 · 点击放大</span></div>
+                <div className="project-document-heading"><h4>{index < 2 ? "部分工作展示" : "完整PDF预览"}</h4><span>共 {project.images.length} 页/张 · 左右滑动 · 点击放大</span></div>
                 <div className="project-document-rail">{project.images.map((src, pageIndex) => <button key={src} onClick={() => setPreviewItem({ label: `${project.name} · ${index < 2 ? "图像" : "第"}${pageIndex + 1}${index < 2 ? "" : "页"}`, kind: "project", src, description: project.type })}><img src={src} alt={`${project.name}${pageIndex + 1}`} loading="lazy" /></button>)}</div>
               </div>
             </article>
