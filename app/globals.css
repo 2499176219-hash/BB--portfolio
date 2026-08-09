@@ -490,6 +490,13 @@ body, button, a { font-family: var(--font-body); }
 .bento-copy i { position: absolute; right: 0; bottom: 0; font-size: 11px; font-style: normal; font-weight: 900; }
 
 .case-workbench { margin-top: 30px; padding: 32px; background: var(--paper); border: var(--line); border-radius: 30px; box-shadow: var(--soft-shadow); }
+.case-modal { position: fixed; z-index: 90; inset: 0; display: grid; place-items: center; padding: 28px; }
+.case-modal-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; background: rgba(62,45,39,.72); border: 0; backdrop-filter: blur(10px); }
+.case-modal-window { position: relative; z-index: 1; width: min(1180px,95vw); max-height: calc(100svh - 56px); overflow-y: auto; border-radius: 30px; box-shadow: 12px 16px 0 rgba(50,35,30,.42); animation: caseModalIn .24s ease-out; }
+.case-modal-window .case-workbench { margin-top: 0; padding-top: 46px; box-shadow: none; }
+.case-modal-close { position: absolute; z-index: 3; top: 15px; right: 18px; display: grid; place-items: center; width: 42px; height: 42px; padding: 0; background: var(--pink); border: 1.5px solid var(--coffee); border-radius: 50%; font-size: 26px; line-height: 1; transition: transform .2s, background .2s; }
+.case-modal-close:hover { transform: rotate(6deg) scale(1.06); background: var(--yellow); }
+@keyframes caseModalIn { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .case-workbench header { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: start; }
 .case-workbench header span { font-size: 10px; letter-spacing: .14em; }
 .case-workbench header h3 { margin: 8px 0; font-family: var(--font-title); font-size: 31px; }
@@ -573,6 +580,10 @@ body, button, a { font-family: var(--font-body); }
   .bento-case { min-height: 285px; }
   .bento-copy h4 { font-size: 29px; }
   .case-workbench { padding: 20px 15px; }
+  .case-modal { display: block; padding: 0; }
+  .case-modal-window { width: 100%; height: 100svh; max-height: none; border-radius: 0; box-shadow: none; }
+  .case-modal-window .case-workbench { min-height: 100%; padding: 70px 16px 28px; border: 0; border-radius: 0; }
+  .case-modal-close { position: fixed; top: 14px; right: 14px; }
   .case-workbench header { grid-template-columns: 1fr; gap: 12px; }
   .case-workbench header h3 { font-size: 25px; }
   .case-result-grid { grid-template-columns: 1fr 1fr; }

@@ -154,7 +154,7 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [catClicks, setCatClicks] = useState(0);
   const [showEgg, setShowEgg] = useState(false);
-  const [activeOperation, setActiveOperation] = useState(0);
+  const [activeOperation, setActiveOperation] = useState<number | null>(null);
   const [activeWriting, setActiveWriting] = useState(0);
   const [activeWritingPage, setActiveWritingPage] = useState(0);
   const [activeVideo, setActiveVideo] = useState(0);
@@ -185,6 +185,24 @@ export default function Home() {
       window.removeEventListener("scroll", updateProgress);
     };
   }, []);
+
+  useEffect(() => {
+    if (activeOperation === null && !previewItem) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (previewItem) setPreviewItem(null);
+      else setActiveOperation(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [activeOperation, previewItem]);
 
   const handleHeroCat = () => {
     const next = catClicks + 1;
@@ -324,21 +342,13 @@ export default function Home() {
           {operationCases.map((item, index) => {
             const bentoImages = [item.image, ...item.images.filter(src => src !== item.image)].slice(0, 3);
             return (
-              <button className={`bento-case bento-case-${index + 1} ${activeOperation === index ? "active" : ""}`} key={item.platform} onClick={() => setActiveOperation(index)}>
+              <button className={`bento-case bento-case-${index + 1}`} key={item.platform} onClick={() => setActiveOperation(index)} aria-haspopup="dialog">
                 <div className="bento-collage">{bentoImages.map((src, imageIndex) => <img src={src} alt="" key={src} className={`collage-${imageIndex + 1}`} />)}</div>
                 <div className="bento-copy"><span>CASE 0{index + 1} · {item.role}</span><h4>{item.platform}</h4><strong>{item.stat}</strong><p>{item.title}</p><i>查看完整案例 ↗</i></div>
               </button>
             );
           })}
         </div>
-        <article className={`case-workbench workbench-${activeOperation + 1}`}>
-          <header><div><span>FULL CASE · 0{activeOperation + 1}</span><h3>{operationCases[activeOperation].detailName}｜{operationCases[activeOperation].title}</h3><p>{operationCases[activeOperation].summary}</p></div><b>{operationCases[activeOperation].role}</b></header>
-          <div className="case-result-grid">{operationCases[activeOperation].results.map(result => <strong key={result}>{result}</strong>)}</div>
-          <div className="case-method"><span>洞察</span><i>→</i><span>策划</span><i>→</i><span>制作</span><i>→</i><span>发布</span><i>→</i><span>复盘</span></div>
-          <div className="case-evidence-heading"><h4>完整图像资料</h4><span>左右滑动 · 点击放大</span></div>
-          <div className="case-evidence-rail">{operationCases[activeOperation].images.map((src, imageIndex) => <button key={src} onClick={() => setPreviewItem({ label: `${operationCases[activeOperation].platform}案例资料 ${String(imageIndex + 1).padStart(2, "0")}`, kind: "project", src, description: operationCases[activeOperation].summary })}><img src={src} alt={`${operationCases[activeOperation].platform}案例资料${imageIndex + 1}`} /><span>{String(imageIndex + 1).padStart(2, "0")}</span></button>)}</div>
-          <div className="case-link-row"><span className="case-link-hint">点击标签跳转链接</span><div className="case-links">{operationCases[activeOperation].links.map(([label, href]) => <a key={href} href={href} target="_blank" rel="noreferrer">{label} ↗</a>)}</div></div>
-        </article>
       </section>
 
       <section className="section writing-section" id="writing">
@@ -469,6 +479,23 @@ export default function Home() {
         </div>
         <a href="#top">返回顶部 ↑</a>
       </section>
+
+      {activeOperation !== null && (
+        <div className="case-modal" role="dialog" aria-modal="true" aria-labelledby="case-modal-title">
+          <button className="case-modal-backdrop" onClick={() => setActiveOperation(null)} aria-label="关闭案例详情" />
+          <div className="case-modal-window">
+            <button className="case-modal-close" onClick={() => setActiveOperation(null)} aria-label="关闭案例详情" autoFocus>×</button>
+            <article className={`case-workbench workbench-${activeOperation + 1}`}>
+              <header><div><span>FULL CASE · 0{activeOperation + 1}</span><h3 id="case-modal-title">{operationCases[activeOperation].detailName}｜{operationCases[activeOperation].title}</h3><p>{operationCases[activeOperation].summary}</p></div><b>{operationCases[activeOperation].role}</b></header>
+              <div className="case-result-grid">{operationCases[activeOperation].results.map(result => <strong key={result}>{result}</strong>)}</div>
+              <div className="case-method"><span>洞察</span><i>→</i><span>策划</span><i>→</i><span>制作</span><i>→</i><span>发布</span><i>→</i><span>复盘</span></div>
+              <div className="case-evidence-heading"><h4>完整图像资料</h4><span>左右滑动 · 点击放大</span></div>
+              <div className="case-evidence-rail">{operationCases[activeOperation].images.map((src, imageIndex) => <button key={src} onClick={() => setPreviewItem({ label: `${operationCases[activeOperation].platform}案例资料 ${String(imageIndex + 1).padStart(2, "0")}`, kind: "project", src, description: operationCases[activeOperation].summary })}><img src={src} alt={`${operationCases[activeOperation].platform}案例资料${imageIndex + 1}`} /><span>{String(imageIndex + 1).padStart(2, "0")}</span></button>)}</div>
+              <div className="case-link-row"><span className="case-link-hint">点击标签跳转链接</span><div className="case-links">{operationCases[activeOperation].links.map(([label, href]) => <a key={href} href={href} target="_blank" rel="noreferrer">{label} ↗</a>)}</div></div>
+            </article>
+          </div>
+        </div>
+      )}
 
       {previewItem && (
         <div className={`preview-modal preview-${previewItem.kind}`} role="dialog" aria-modal="true" aria-label={`${previewItem.label}大图预览`}>
