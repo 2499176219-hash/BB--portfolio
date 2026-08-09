@@ -792,6 +792,36 @@ body, button, a { font-family: var(--font-body); }
 }
 
 @media (max-width: 680px) {
+  .hero-visual {
+    position: absolute;
+    right: 12px;
+    bottom: 102px;
+    width: 182px;
+    height: 150px;
+    min-height: 0;
+    margin: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .hero-visual .hero-character {
+    flex: 0 0 108px;
+    width: 108px;
+    max-height: 150px;
+    object-position: center bottom;
+  }
+  .hero-visual .hero-cat-cover {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    flex: 0 0 62px;
+    order: -1;
+    width: 62px;
+    height: 62px;
+    margin: 0 0 7px;
+  }
   .contact-section { padding-right: 20px; padding-bottom: 140px; }
   .contact-cluster { display: flex; flex-direction: column; align-items: center; gap: 18px; }
   .contact-cluster .contact-character { width: 210px; order: 1; }
