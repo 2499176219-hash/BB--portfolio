@@ -66,10 +66,10 @@ const operationCases = [
     results: ["累计赞藏1.6万", "爆款曝光10万", "单篇9000+赞", "新增粉丝100+"],
     role: "个人账号运营",
     links: [
-      ["进入主页", "https://xhslink.cn/m/AoV0qgWkAxI"],
       ["考试爆款", "http://xhslink.cn/o/7u8PPHjS7UX"],
       ["综艺热评", "http://xhslink.cn/o/ARYZUh6RIOB"],
       ["睫毛软广", "http://xhslink.cn/o/5IkTtfWtQ3a"],
+      ["进入主页", "https://xhslink.cn/m/AoV0qgWkAxI"],
     ],
   },
   {
