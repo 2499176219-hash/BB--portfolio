@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import FoldText from "./FoldText";
 
 const navItems = [
   { id: "about", label: "关于我", cat: 1 },
@@ -66,10 +67,10 @@ const operationCases = [
     results: ["累计赞藏1.6万", "爆款曝光10万", "单篇9000+赞", "新增粉丝100+"],
     role: "个人账号运营",
     links: [
-      ["进入主页", "https://xhslink.cn/m/AoV0qgWkAxI"],
       ["考试爆款", "http://xhslink.cn/o/7u8PPHjS7UX"],
       ["综艺热评", "http://xhslink.cn/o/ARYZUh6RIOB"],
       ["睫毛软广", "http://xhslink.cn/o/5IkTtfWtQ3a"],
+      ["进入主页", "https://xhslink.cn/m/AoV0qgWkAxI"],
     ],
   },
   {
@@ -154,17 +155,19 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [catClicks, setCatClicks] = useState(0);
   const [showEgg, setShowEgg] = useState(false);
-  const [activeOperation, setActiveOperation] = useState(0);
+  const [activeOperation, setActiveOperation] = useState<number | null>(null);
   const [activeWriting, setActiveWriting] = useState(0);
   const [activeWritingPage, setActiveWritingPage] = useState(0);
   const [activeVideo, setActiveVideo] = useState(0);
   const [openProject, setOpenProject] = useState(0);
   const [activePhoto, setActivePhoto] = useState(0);
   const [activePoster, setActivePoster] = useState(0);
+  const [sectionTransition, setSectionTransition] = useState<{ label: string; compact: boolean } | null>(null);
   const [previewItem, setPreviewItem] = useState<{ label: string; kind: "poster" | "photo" | "writing" | "project"; src?: string; description?: string } | null>(null);
   const galleryDragStart = useRef<number | null>(null);
   const posterDragStart = useRef<number | null>(null);
   const posterWasDragged = useRef(false);
+  const sectionTransitionActive = useRef(false);
 
   useEffect(() => {
     const sections = navItems.map(item => document.getElementById(item.id)).filter(Boolean) as HTMLElement[];
@@ -185,6 +188,46 @@ export default function Home() {
       window.removeEventListener("scroll", updateProgress);
     };
   }, []);
+
+  useEffect(() => {
+    const revealTargets = Array.from(document.querySelectorAll<HTMLElement>(".section, .contact-section"));
+    const revealObserver = new IntersectionObserver(
+      entries => entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-revealed");
+        revealObserver.unobserve(entry.target);
+      }),
+      { rootMargin: "0px 0px -10%", threshold: 0.06 },
+    );
+
+    revealTargets.forEach(target => {
+      target.classList.add("reveal-ready");
+      revealObserver.observe(target);
+    });
+
+    return () => {
+      revealObserver.disconnect();
+      revealTargets.forEach(target => target.classList.remove("reveal-ready", "is-revealed"));
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activeOperation === null && !previewItem) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (previewItem) setPreviewItem(null);
+      else setActiveOperation(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [activeOperation, previewItem]);
 
   const handleHeroCat = () => {
     const next = catClicks + 1;
@@ -242,6 +285,38 @@ export default function Home() {
     setActiveWritingPage(current => (current + direction + pageCount) % pageCount);
   };
 
+  const handleSectionNavigate = (event: ReactMouseEvent<HTMLAnchorElement>, id: string, label: string) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+
+    const target = document.getElementById(id);
+    if (!target || sectionTransitionActive.current) return;
+
+    const jumpToTarget = () => {
+      const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = "auto";
+      window.history.pushState(null, "", `#${id}`);
+      target.scrollIntoView({ block: "start" });
+      window.requestAnimationFrame(() => { document.documentElement.style.scrollBehavior = previousScrollBehavior; });
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      jumpToTarget();
+      return;
+    }
+
+    const compact = window.matchMedia("(max-width: 680px)").matches;
+    const midpoint = compact ? 330 : 410;
+    const totalDuration = compact ? 760 : 920;
+    sectionTransitionActive.current = true;
+    setSectionTransition({ label, compact });
+    window.setTimeout(jumpToTarget, midpoint);
+    window.setTimeout(() => {
+      setSectionTransition(null);
+      sectionTransitionActive.current = false;
+    }, totalDuration);
+  };
+
   return (
     <main>
       <aside className="cat-nav" aria-label="作品集章节导航">
@@ -250,25 +325,26 @@ export default function Home() {
           {[0, 1, 2, 3, 4, 5].map(paw => <span key={paw} className={progress >= paw / 5 ? "lit" : ""}>●</span>)}
         </div>
         {navItems.map(item => (
-          <a href={`#${item.id}`} className={activeSection === item.id ? "active" : ""} key={item.id} aria-label={item.label}>
+          <a href={`#${item.id}`} className={activeSection === item.id ? "active" : ""} key={item.id} aria-label={item.label} onClick={event => handleSectionNavigate(event, item.id, item.label)}>
             <Cat number={item.cat} /><span>{item.label}</span>
           </a>
         ))}
-        <a className="nav-contact" href="#contact" aria-label="联系我">♡</a>
+        <a className="nav-contact" href="#contact" aria-label="联系我" onClick={event => handleSectionNavigate(event, "contact", "联系我")}>♡</a>
       </aside>
 
       <section className="hero" id="top">
         <nav className="hero-text-nav" aria-label="封面快捷导航">
-          <a href="#about">关于我</a><a href="#operations">运营案例</a><a href="#writing">文字图像</a><a href="#visual">影像创作</a><a href="#projects">项目策划</a><a href="#contact">联系我</a>
+          {navItems.map(item => <a href={`#${item.id}`} key={item.id} onClick={event => handleSectionNavigate(event, item.id, item.label)}>{item.label}</a>)}
+          <a href="#contact" onClick={event => handleSectionNavigate(event, "contact", "联系我")}>联系我</a>
         </nav>
         <div className="hero-doodle doodle-heart">♡</div>
         <div className="hero-doodle doodle-star">✦</div>
         <div className="hero-copy">
           <p className="eyebrow">BAI XINYUE · PERSONAL</p>
-          <h1>PORTFOLIO</h1>
-          <p className="hero-name">柏欣悦</p>
+          <h1><FoldText text="PORTFOLIO" splitBy="char" hinge="top" trigger="mount" duration={0.65} stagger={0.045} ease="power3.out" perspective={700} creaseShading={0.55} /></h1>
+          <p className="hero-name"><FoldText text="柏欣悦" splitBy="char" hinge="top" trigger="mount" duration={0.65} stagger={0.045} ease="power3.out" perspective={700} creaseShading={0.55} /></p>
           <div className="hero-contact"><span>EMAIL · Baixinyue6486@163.com</span><span>TEL · 157 7568 2252</span></div>
-          <a className="soft-button" href="#about">进入作品集 <b>↓</b></a>
+          <a className="soft-button" href="#about" onClick={event => handleSectionNavigate(event, "about", "关于我")}>进入作品集 <b>↓</b></a>
         </div>
         <div className="hero-visual">
           <img className="hero-character" src="/media/hero-green-character.png" alt="青绿色贝雷帽人物插画" />
@@ -324,21 +400,13 @@ export default function Home() {
           {operationCases.map((item, index) => {
             const bentoImages = [item.image, ...item.images.filter(src => src !== item.image)].slice(0, 3);
             return (
-              <button className={`bento-case bento-case-${index + 1} ${activeOperation === index ? "active" : ""}`} key={item.platform} onClick={() => setActiveOperation(index)}>
+              <button className={`bento-case bento-case-${index + 1}`} key={item.platform} onClick={() => setActiveOperation(index)} aria-haspopup="dialog">
                 <div className="bento-collage">{bentoImages.map((src, imageIndex) => <img src={src} alt="" key={src} className={`collage-${imageIndex + 1}`} />)}</div>
                 <div className="bento-copy"><span>CASE 0{index + 1} · {item.role}</span><h4>{item.platform}</h4><strong>{item.stat}</strong><p>{item.title}</p><i>查看完整案例 ↗</i></div>
               </button>
             );
           })}
         </div>
-        <article className={`case-workbench workbench-${activeOperation + 1}`}>
-          <header><div><span>FULL CASE · 0{activeOperation + 1}</span><h3>{operationCases[activeOperation].detailName}｜{operationCases[activeOperation].title}</h3><p>{operationCases[activeOperation].summary}</p></div><b>{operationCases[activeOperation].role}</b></header>
-          <div className="case-result-grid">{operationCases[activeOperation].results.map(result => <strong key={result}>{result}</strong>)}</div>
-          <div className="case-method"><span>洞察</span><i>→</i><span>策划</span><i>→</i><span>制作</span><i>→</i><span>发布</span><i>→</i><span>复盘</span></div>
-          <div className="case-evidence-heading"><h4>完整图像资料</h4><span>左右滑动 · 点击放大</span></div>
-          <div className="case-evidence-rail">{operationCases[activeOperation].images.map((src, imageIndex) => <button key={src} onClick={() => setPreviewItem({ label: `${operationCases[activeOperation].platform}案例资料 ${String(imageIndex + 1).padStart(2, "0")}`, kind: "project", src, description: operationCases[activeOperation].summary })}><img src={src} alt={`${operationCases[activeOperation].platform}案例资料${imageIndex + 1}`} /><span>{String(imageIndex + 1).padStart(2, "0")}</span></button>)}</div>
-          <div className="case-link-row"><span className="case-link-hint">点击标签跳转链接</span><div className="case-links">{operationCases[activeOperation].links.map(([label, href]) => <a key={href} href={href} target="_blank" rel="noreferrer">{label} ↗</a>)}</div></div>
-        </article>
       </section>
 
       <section className="section writing-section" id="writing">
@@ -448,7 +516,7 @@ export default function Home() {
               </button>
               <div className="folder-content">
                 <div className="project-summary"><p>{project.summary}</p>{project.tags.map(tag => <span key={tag}>{tag}</span>)}{project.links.length > 0 && <div className="project-links">{project.links.map(([label, href]) => <a key={href} href={href} target="_blank" rel="noreferrer">{label} ↗</a>)}</div>}</div>
-                <div className="project-document-heading"><h4>{index < 2 ? "全部工作图像" : "完整PDF预览"}</h4><span>共 {project.images.length} 页/张 · 左右滑动 · 点击放大</span></div>
+                <div className="project-document-heading"><h4>{index < 2 ? "部分工作展示" : "完整PDF预览"}</h4><span>共 {project.images.length} 页/张 · 左右滑动 · 点击放大</span></div>
                 <div className="project-document-rail">{project.images.map((src, pageIndex) => <button key={src} onClick={() => setPreviewItem({ label: `${project.name} · ${index < 2 ? "图像" : "第"}${pageIndex + 1}${index < 2 ? "" : "页"}`, kind: "project", src, description: project.type })}><img src={src} alt={`${project.name}${pageIndex + 1}`} loading="lazy" /></button>)}</div>
               </div>
             </article>
@@ -467,8 +535,33 @@ export default function Home() {
           </div>
           <Cat number={5} className="contact-cat" />
         </div>
-        <a href="#top">返回顶部 ↑</a>
+        <a href="#top" onClick={event => handleSectionNavigate(event, "top", "首页")}>返回顶部 ↑</a>
       </section>
+
+      {sectionTransition && (
+        <div className={`section-transition ${sectionTransition.compact ? "is-compact" : ""}`} role="status" aria-live="polite" aria-label={`正在前往${sectionTransition.label}`}>
+          <div className="section-transition__panel panel-pink" />
+          <div className="section-transition__panel panel-green" />
+          <div className="section-transition__label"><span>NEXT CHAPTER</span><strong>{sectionTransition.label}</strong></div>
+        </div>
+      )}
+
+      {activeOperation !== null && (
+        <div className="case-modal" role="dialog" aria-modal="true" aria-labelledby="case-modal-title">
+          <button className="case-modal-backdrop" onClick={() => setActiveOperation(null)} aria-label="关闭案例详情" />
+          <div className="case-modal-window">
+            <button className="case-modal-close" onClick={() => setActiveOperation(null)} aria-label="关闭案例详情" autoFocus>×</button>
+            <article className={`case-workbench workbench-${activeOperation + 1}`}>
+              <header><div><span>FULL CASE · 0{activeOperation + 1}</span><h3 id="case-modal-title">{operationCases[activeOperation].detailName}｜{operationCases[activeOperation].title}</h3><p>{operationCases[activeOperation].summary}</p></div><b>{operationCases[activeOperation].role}</b></header>
+              <div className="case-result-grid">{operationCases[activeOperation].results.map(result => <strong key={result}>{result}</strong>)}</div>
+              <div className="case-method"><span>洞察</span><i>→</i><span>策划</span><i>→</i><span>制作</span><i>→</i><span>发布</span><i>→</i><span>复盘</span></div>
+              <div className="case-evidence-heading"><h4>完整图像资料</h4><span>左右滑动 · 点击放大</span></div>
+              <div className="case-evidence-rail">{operationCases[activeOperation].images.map((src, imageIndex) => <button key={src} onClick={() => setPreviewItem({ label: `${operationCases[activeOperation].platform}案例资料 ${String(imageIndex + 1).padStart(2, "0")}`, kind: "project", src, description: operationCases[activeOperation].summary })}><img src={src} alt={`${operationCases[activeOperation].platform}案例资料${imageIndex + 1}`} /><span>{String(imageIndex + 1).padStart(2, "0")}</span></button>)}</div>
+              <div className="case-link-row"><span className="case-link-hint">点击标签跳转链接</span><div className="case-links">{operationCases[activeOperation].links.map(([label, href]) => <a key={href} href={href} target="_blank" rel="noreferrer">{label} ↗</a>)}</div></div>
+            </article>
+          </div>
+        </div>
+      )}
 
       {previewItem && (
         <div className={`preview-modal preview-${previewItem.kind}`} role="dialog" aria-modal="true" aria-label={`${previewItem.label}大图预览`}>
