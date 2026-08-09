@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import FoldText from "./FoldText";
 
 const navItems = [
   { id: "about", label: "关于我", cat: 1 },
@@ -283,8 +284,8 @@ export default function Home() {
         <div className="hero-doodle doodle-star">✦</div>
         <div className="hero-copy">
           <p className="eyebrow">BAI XINYUE · PERSONAL</p>
-          <h1>PORTFOLIO</h1>
-          <p className="hero-name">柏欣悦</p>
+          <h1><FoldText text="PORTFOLIO" splitBy="char" hinge="top" trigger="mount" duration={0.65} stagger={0.045} ease="power3.out" perspective={700} creaseShading={0.55} /></h1>
+          <p className="hero-name"><FoldText text="柏欣悦" splitBy="char" hinge="top" trigger="mount" duration={0.65} stagger={0.045} ease="power3.out" perspective={700} creaseShading={0.55} /></p>
           <div className="hero-contact"><span>EMAIL · Baixinyue6486@163.com</span><span>TEL · 157 7568 2252</span></div>
           <a className="soft-button" href="#about">进入作品集 <b>↓</b></a>
         </div>

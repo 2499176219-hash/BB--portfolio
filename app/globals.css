@@ -46,6 +46,14 @@ p, h1, h2, h3, h4 { margin-top: 0; }
 .hero::before { content: ""; position: absolute; width: 46vw; height: 46vw; right: -8vw; top: -9vw; border-radius: 50%; background: var(--pink); opacity: .72; }
 .hero::after { content: ""; position: absolute; width: 28vw; height: 28vw; left: -11vw; bottom: -10vw; border-radius: 50%; background: var(--matcha); opacity: .75; }
 .hero-copy { position: relative; z-index: 2; }
+.fold-text { display: inline-flex; font-size: var(--fold-font-size); font-weight: var(--fold-font-weight); color: var(--fold-color); perspective: var(--fold-perspective); }
+.fold-text__char { position: relative; display: inline-block; perspective: var(--fold-perspective); }
+.fold-text__face { position: relative; display: inline-block; opacity: 0; transform-style: preserve-3d; backface-visibility: hidden; animation: foldTextOpen var(--fold-duration) var(--fold-ease) forwards; animation-delay: calc(var(--fold-index) * var(--fold-stagger)); }
+.fold-text__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom,rgba(55,35,30,var(--fold-crease)),transparent 58%); opacity: var(--fold-crease); animation: foldTextCrease var(--fold-duration) var(--fold-ease) forwards; animation-delay: calc(var(--fold-index) * var(--fold-stagger)); }
+.fold-text--hinge-top .fold-text__face { transform-origin: center top; transform: rotateX(-92deg) translateY(-.08em); }
+.fold-text--hinge-bottom .fold-text__face { transform-origin: center bottom; transform: rotateX(92deg) translateY(.08em); }
+@keyframes foldTextOpen { 0% { opacity: 0; } 18% { opacity: 1; } 100% { opacity: 1; transform: rotateX(0) translateY(0); } }
+@keyframes foldTextCrease { from { opacity: var(--fold-crease); } to { opacity: 0; } }
 .eyebrow { margin-bottom: 26px; font-size: 10px; font-weight: 800; letter-spacing: .22em; }
 .hero h1 { margin-bottom: 18px; font-size: clamp(84px,13vw,190px); line-height: .8; letter-spacing: -.09em; color: var(--coffee); }
 .hero-subtitle { margin-bottom: 28px; font-size: clamp(24px,3vw,44px); font-weight: 800; letter-spacing: .08em; }
@@ -840,4 +848,4 @@ body, button, a { font-family: var(--font-body); }
   .contact-cluster .contact-cat { left: calc(50% + 60px); bottom: auto; top: 155px; width: 78px; height: 78px; }
 }
 
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before { animation: none !important; transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before { animation: none !important; transition: none !important; } .fold-text__face { opacity: 1 !important; transform: none !important; } .fold-text__face::after { opacity: 0 !important; } }
