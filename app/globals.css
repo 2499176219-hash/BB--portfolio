@@ -65,6 +65,20 @@ p, h1, h2, h3, h4 { margin-top: 0; }
 .hero-ribbon { position: absolute; z-index: 3; left: -2%; right: -2%; bottom: 18px; padding: 10px 0; background: var(--coffee); color: var(--cream); transform: rotate(-1.2deg); white-space: nowrap; overflow: hidden; font-size: 9px; letter-spacing: .36em; text-align: center; }
 
 .section { position: relative; padding: 8vw 8vw 10vw; border-bottom: var(--line); scroll-margin-top: 20px; }
+.section.reveal-ready, .contact-section.reveal-ready { opacity: 0; filter: blur(4px); transform: translate3d(0,36px,0); transition: opacity .72s cubic-bezier(.22,1,.36,1), transform .72s cubic-bezier(.22,1,.36,1), filter .72s ease; }
+.section.reveal-ready.is-revealed, .contact-section.reveal-ready.is-revealed { opacity: 1; filter: blur(0); transform: translate3d(0,0,0); }
+.section-transition { position: fixed; z-index: 88; inset: 0; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; pointer-events: all; }
+.section-transition__panel { position: relative; z-index: 1; width: 100%; height: 100%; animation-duration: 920ms; animation-timing-function: cubic-bezier(.76,0,.24,1); animation-fill-mode: both; }
+.section-transition__panel.panel-pink { background: var(--pink); animation-name: chapterCurtainUp; }
+.section-transition__panel.panel-green { background: var(--matcha); animation-name: chapterCurtainDown; }
+.section-transition__label { position: absolute; z-index: 2; inset: 0; display: grid; place-content: center; justify-items: center; color: var(--coffee); text-align: center; pointer-events: none; animation: chapterLabel 920ms ease both; }
+.section-transition__label span { margin-bottom: 9px; font-family: var(--font-latin); font-size: 10px; font-weight: 900; letter-spacing: .24em; }
+.section-transition__label strong { font-family: var(--font-title); font-size: clamp(48px,8vw,112px); font-weight: 400; letter-spacing: .08em; }
+.section-transition.is-compact .section-transition__panel { animation-duration: 760ms; }
+.section-transition.is-compact .section-transition__label { animation-duration: 760ms; }
+@keyframes chapterCurtainUp { 0% { transform: translateY(102%); } 43%,57% { transform: translateY(0); } 100% { transform: translateY(-102%); } }
+@keyframes chapterCurtainDown { 0% { transform: translateY(-102%); } 43%,57% { transform: translateY(0); } 100% { transform: translateY(102%); } }
+@keyframes chapterLabel { 0%,28% { opacity: 0; transform: translateY(18px); } 43%,58% { opacity: 1; transform: translateY(0); } 76%,100% { opacity: 0; transform: translateY(-14px); } }
 .section-title { display: grid; grid-template-columns: 70px auto 1fr; align-items: end; gap: 22px; margin-bottom: 6vw; }.section-title > span { display: grid; place-items: center; width: 58px; height: 58px; background: var(--paper); border: var(--line); border-radius: 50%; font-size: 17px; font-weight: 900; }.section-title p { margin-bottom: 7px; font-size: 9px; letter-spacing: .2em; font-weight: 900; }.section-title h2 { margin: 0; font-size: clamp(48px,7vw,100px); line-height: .82; letter-spacing: -.07em; }.section-title > i { height: 2px; background: var(--coffee); margin-bottom: 8px; }
 
 .content-slot { position: relative; overflow: hidden; display: grid; place-items: center; min-height: 180px; background: linear-gradient(135deg, rgba(255,255,255,.65), rgba(246,200,214,.18)); border: 1.5px dashed rgba(106,80,70,.65); border-radius: 22px; }
@@ -848,4 +862,4 @@ body, button, a { font-family: var(--font-body); }
   .contact-cluster .contact-cat { left: calc(50% + 60px); bottom: auto; top: 155px; width: 78px; height: 78px; }
 }
 
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before { animation: none !important; transition: none !important; } .fold-text__face { opacity: 1 !important; transform: none !important; } .fold-text__face::after { opacity: 0 !important; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before { animation: none !important; transition: none !important; } .fold-text__face, .section.reveal-ready, .contact-section.reveal-ready { opacity: 1 !important; filter: none !important; transform: none !important; } .fold-text__face::after { opacity: 0 !important; } .section-transition { display: none !important; } }
